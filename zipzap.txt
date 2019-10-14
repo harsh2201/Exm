@@ -1,0 +1,41 @@
+.model prac5-10
+.data
+.code 
+mov bx,200h;base address
+mov ds,bx;moving to base address
+mov di,201h;This will be first memory 
+mov bx,20;This is random value
+mov cx,10;counter=10     
+giving:
+mov [di],bx
+dec bx
+inc di
+loop giving
+mov di,201h;This will start from first
+mov bx,201h;This will start from second  
+mov cx,5
+outerloop:
+ innerloop:      
+        mov ah,[di]
+        mov dh,[bx]
+        cmp dh,ah;This will help in comparision
+        jc change
+        jnc exit
+        change:
+        mov dh,[bx]
+        mov [bx],ah;This will shift bigger number
+        mov [di],dh;This will shift smaller number
+        exit:
+        mov si,205h;This will help in comparison
+        cmp si,bx
+        jz abc
+        inc bx
+jmp innerloop
+abc:
+inc di;This will be done for second element
+mov bx,di
+inc bx; 
+mov si,205h
+cmp si,di
+jnz outerloop
+end 
