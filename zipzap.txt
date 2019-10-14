@@ -276,3 +276,55 @@ jnz outerloop
 end 
 
 
+Reverse string
+.model prac5-8 
+.stack 100h  
+.data  
+string db 'hinel', '^'
+.code   
+mov ax,@data;base address  
+mov ds,ax;moving to base address  
+call rev;procedure call  
+; load address of the string  
+lea dx,string  
+; interrupt to exit
+mov ah, 4ch 
+int 21h    
+rev proc 
+    mov si, offset string    
+    mov cx, 0h  
+    checkloop:
+    ;this check loop will decide if the character is last or not   
+    mov ax, [si]  
+    cmp al, '^'
+    je lastsymbol  
+    ;if it is not the $ symbol then do this 
+    push [si]  
+    ;increament both cx and si  
+    inc si  
+    inc cx  
+    jmp checkloop  
+    lastsymbol: 
+    ;if jump is done then come here and set si again  
+    mov si, offset string  
+        reversing:  
+        ;if count is zero exit  
+        cmp cx,0  
+        je exit  
+        ; if not then execute  
+        pop dx  
+        ; this is done becaue the values is only stored in dl and dh value is garbage so we need want it  
+        xor dh, dh  
+        ;this will help in reversing string  
+        mov [si], dx  
+        ;decrementing cx  
+        inc si  
+        dec cx  
+        jmp reversing  
+    exit: 
+    ; add ^ to the end of string  
+    mov [si],'^ '
+    ret           
+rev endp  
+end
+
