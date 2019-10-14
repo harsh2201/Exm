@@ -1,3 +1,238 @@
+Selective set 
+mov bx, 0400h; Base Address
+mov ds, bx; Moving to Base Address
+
+mov [00h], 20h; storing value 20h to 4000 location
+mov ax, [00h]; value of 4000 location is store in ax register
+
+mov [01h], 30h; storing value 30h to 4001 location
+mov bx, [01h]; value of 4001 location is store in bx register
+
+OR  bx, ax; Or Operation between ax and bx and answer is stored in bx register
+mov [02h], bx; Answer will be stored at 4002 location
+
+SAR
+org 100h
+
+mov bx,0400h; Base address
+mov ds,bx; Moving to Base address
+
+mov [00h],20; storing value 20h to 4000 location  
+mov al,[00h]; value of 4000 location is store in al register
+ 
+sal al,1; Multiply by 2 and perform shl
+mov [01h],al; Answer will be stored at 4001 location
+
+mov ax,00h; stores value 00h in ax register            
+mov al,[00h]; value of 4000 location is store in al register 
+
+sar al,1; Divide by 2 and perform sar 
+mov [02h],al; Answer will be stored at 4002 location
+
+ret
+
+
+Divide 4009 by 4001
+.model program_4.1
+
+.data
+array db 2,4,6,8,10;Array 
+
+.code
+mov ax,@data;Base Address
+mov ds,ax;Moving to Base Address
+mov ax,0; storing value 0 at ax register  
+mov cx,5;counter
+
+mov di,0;Indexed pointing to value 0
+mov bl,2;stores value 2-
+
+   divi: ;loop
+   mov al,0
+   mov al,array[di] ;stores value of array in al after each iteration
+   div bl;divide each element by 2         
+   mov array[di],al;stores the result after dividing
+   inc di
+   loop divi;End of loop
+    
+END
+
+
+Divide array by array
+.model prog-4.2
+
+.data
+
+array db 1,2,3,4,5;Array of 5 Elements
+array2 db 2,4,9,16,5
+result db 5 DUP(?); for storing result
+
+.code
+
+MOV DX, @data;Base address
+MOV DS,DX;moving to base address
+MOV CX, 5;counter
+MOV BX, 0;storing value 0 at bx register
+
+next:;loop
+mov AL, array2[bx] ; array2 will be passed into the al after each iteration
+DIV array[bx] ; QUOTIENT SAVED IN al, AND REMAINDER IN AH, DIVIDEND SAVED IN AX
+
+mov result[bx], al
+inc bx
+
+LOOP next;loop end
+Ret
+
+
+Find Max/Largest from array
+org 100h
+.data
+ arr db 01h,16h,03h,08h,07h
+ max db 00h
+.code
+ mov ax,@data
+ mov ds,ax
+ mov di,0h
+ mov cx,5
+ clc
+ i:
+ mov AL, max 
+CMP AL, arr[di]
+ JNC label
+ mov BL,arr[di]
+ mov max,BL
+ label:
+ INC DI
+ loop i 
+
+
+
+Count positive and negative from array
+org 100h
+.data
+ arr db -10, 20, -30, -40, 50
+ countp db 0H
+ countn db 0H
+.code
+ mov ax,@data
+ mov ds,ax
+ mov di,0
+ mov cx,5
+ clc
+ i:
+ mov AL,arr[di]
+ RCL AL,1
+ JC negative
+ JNC positive
+ negative:
+ INC countn
+ INC DI
+ loop i
+ positive:
+ INC countp
+ INC DI
+ loop i 
+
+
+Multiply 16 bit
+org 100h
+
+mov bx,0400h;Base address
+mov ds, bx;moving to base address   
+
+mov [00h],4000h;moving 4000 value at 4000 location                  
+mov [02h],4025h;moving 4025 value at 4002 loaction
+
+mov ax,[00h];storing value at ax register 
+mov bx,[02h];storing value at bx register   
+
+mul bx;multiplication
+
+mov [004h],ax
+mov [006h],dx
+                  
+ret
+
+
+Delay on array element
+MOV CX,9
+MOV AL,9
+cx:
+MOV AH, 86H
+INT 15H
+MOV AH, 86H
+INT 15H
+OUT 01H, AL
+DEC AL
+loop CX
+
+
+Set parity flag
+.model prac5_1
+
+.data
+number dB 00000000b
+
+.code
+mov ax,@data ;base address
+mov ds,ax  ; moving to base address
+MOV ah,number; it will move parity bit to all
+sahf;register to flag
+
+
+ADD with carry and move flag to register
+.model prac5_3
+
+.data
+num1 db 7ah;num1=7ah
+num2 db 46h;num2=46h
+
+.code
+mov ax,@data; base address
+mov ds,ax; moving to base address
+mov bh,num1;moving value of num1 to bh register
+adc bh,num2; adding num1 and num2 with carry
+lahf; flag to fregister
+
+mov dh,ah; moving values of ah to dh register
+mov cx,200h; base address at 200
+mov ds,cx ; moving to base location at 2000h
+mov [098h],bh;moving value of bh register to 2098 location
+mov [097h],dh;moving value of dh register to 2097 location
+
+end
+
+
+Subroutine add
+.model prac5-5
+ 
+.data
+a dw 10h;a=10h
+b dw 00f0h;b=00f0h
+
+.code 
+mov bx,@data;base address
+mov ds,bx;moving to base address
+
+mov ax,a; moving value of a to ax register
+adc ax,b;adding a and b with carry
+call addition; subroutine call
+
+addition proc; procedure starts 
+    
+    mov bx,200h;base address
+    mov ds,bx;moving to base address  
+    mov [0040h],ax;moving result of ax to location at 2040h
+    lahf
+    and ah,10111111b;performs and operations
+    sahf
+   
+endp;end of procedure
+
+
+
+Sort array in ascending
 .model prac5-10
 .data
 .code 
@@ -39,3 +274,5 @@ mov si,205h
 cmp si,di
 jnz outerloop
 end 
+
+
