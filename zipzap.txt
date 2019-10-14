@@ -328,3 +328,21 @@ rev proc
 rev endp  
 end
 
+n Fibonnacci Series
+.model prac5-11
+.data
+.code 
+mov bx,300h;base address
+mov ds,bx;moving to base address
+mov di,00h;di=0
+mov cx,5;cx=5
+mov [di],0;first element
+mov [di+1],1;second element  
+fibo:
+mov ax,[di]
+mov bx,[di+1];third element
+adc ax,bx;perform add with carry
+mov [di+2],ax
+inc di;shift by 2
+loop fibo
+end 
